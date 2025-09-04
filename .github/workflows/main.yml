@@ -1,0 +1,59 @@
+name: Deploy with Kamal
+
+
+on:
+  push:
+    branches:
+      - main
+
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Ruby (for Kamal)
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.4'
+
+      - name: Install Kamal
+
+        run: gem install kamal --no-document
+
+      # Authenticate to Google Cloud and Docker with the service account key
+      - name: Authenticate to Google Cloud and Docker
+        env:
+          # Your GCP_CREDENTIALS secret should contain the BASE64-ENCODED JSON key
+          GCP_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
+        run: |
+          echo "$GCP_CREDENTIALS"  > /tmp/gcp_key.json
+
+          gcloud auth activate-service-account --key-file /tmp/gcp_key.json
+          gcloud auth configure-docker us-docker.pkg.dev --quiet
+
+      - name: Create Kamal secrets file
+        run: |
+          mkdir -p .kamal
+          echo "KAMAL_REGISTRY_PASSWORD=${{ secrets.GCP_CREDENTIALS_KAMAL }}" > .kamal/secrets
+          cat .kamal/secrets
+
+      - name: Set up SSH
+
+        uses: webfactory/ssh-agent@v0.8.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY_ENVOY }}
+
+      - name: Build and Push Docker Image
+        run: |
+          IMAGE_URL="us-docker.pkg.dev/trusty-shine-468707-j9/gcr.io/app-server"
+          IMAGE_TAG=$(git rev-parse --short HEAD) # Using short hash for brevity in tags
+          docker build -t "$IMAGE_URL:$IMAGE_TAG" .
+          docker push "$IMAGE_URL:$IMAGE_TAG"
+
+      - name: Deploy with Kamal
+        run: |
+          kamal details
+          kamal deploy

@@ -1,0 +1,32 @@
+service: app-server
+
+image: trusty-shine-468707-j9/gcr.io/app-server
+
+servers:
+  web:
+    - 35.184.143.26
+
+builder:
+  arch: amd64
+
+proxy:
+  app_port: 3000
+  # host: 35.193.245.114
+  healthcheck:
+    path: /
+    interval: 10
+    timeout: 35
+
+registry:
+  server: us-docker.pkg.dev
+  username: _json_key_base64
+  password:
+    - KAMAL_REGISTRY_PASSWORD
+ssh:
+  user: filippetruneac03
+  keys: []
+  port: 22
+
+env:
+  clear:
+    PORT: 3000
