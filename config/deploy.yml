@@ -1,10 +1,10 @@
 service: app-server
 
-image: trusty-shine-468707-j9/gcr.io/app-server
+image: 	chrome-insight-471112-g2/gcr.io/app-server
 
 servers:
   web:
-    - 35.184.143.26
+    - 34.41.103.180
 
 builder:
   arch: amd64
@@ -23,7 +23,7 @@ registry:
   password:
     - KAMAL_REGISTRY_PASSWORD
 ssh:
-  user: filippetruneac03
+  user: petruneactabita
   keys: []
   port: 22
 
