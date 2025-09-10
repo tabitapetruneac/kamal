@@ -48,7 +48,7 @@ jobs:
 
       - name: Build and Push Docker Image
         run: |
-          IMAGE_URL="us-docker.pkg.dev/trusty-shine-468707-j9/gcr.io/app-server"
+          IMAGE_URL="us-docker.pkg.dev/chrome-insight-471112-g2/gcr.io/app-server"
           IMAGE_TAG=$(git rev-parse --short HEAD) # Using short hash for brevity in tags
           docker build -t "$IMAGE_URL:$IMAGE_TAG" .
           docker push "$IMAGE_URL:$IMAGE_TAG"
