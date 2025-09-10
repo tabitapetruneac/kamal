@@ -27,4 +27,3 @@ EXPOSE 3000
 
 # The command to run when the container starts
 CMD ["./kamal"]
-
