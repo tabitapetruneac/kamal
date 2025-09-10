@@ -57,3 +57,4 @@ jobs:
         run: |
           kamal details
           kamal deploy
+          
