@@ -1,6 +1,6 @@
-service: app-server
+service: kamal
 
-image: 	chrome-insight-471112-g2/gcr.io/app-server
+image: 	chrome-insight-471112-g2/gcr.io/kamal
 
 servers:
   web:
@@ -30,3 +30,4 @@ ssh:
 env:
   clear:
     PORT: 3000
+
